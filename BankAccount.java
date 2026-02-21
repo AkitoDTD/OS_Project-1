@@ -3,7 +3,7 @@ public class BankAccount {
     protected double balance;
 
     public BankAccount() {
-        balance = 0.0;
+        this.balance = 0.0;
     }
 
     public BankAccount(double balance) {
@@ -18,7 +18,12 @@ public class BankAccount {
 
     public void withdraw(double amount) {
         if (validateTransaction(amount)) {
-            updateBalance(-amount);
+            if (balance - amount < 0) {
+                System.out.println("Insufficient balance.");
+            }
+            else {
+                updateBalance(-amount);
+            }
         }
     }
 
@@ -28,18 +33,19 @@ public class BankAccount {
 
     public void transfer(double amount, BankAccount target) {
         if (validateTransaction(amount)) {
-            this.withdraw(amount);
-            target.deposit(amount);
+            if (this.balance >= amount) {
+                this.withdraw(amount);
+                target.deposit(amount);
+            } 
+            else {
+                System.out.println("Insufficient balance.");
+            }
         }
     }
 
     protected boolean validateTransaction(double amount) {
         if (amount <= 0) {
             System.out.println("Invalid amount.");
-            return false;
-        }
-        if (balance + amount < 0) {
-            System.out.println("Insufficient balance.");
             return false;
         }
         return true;
