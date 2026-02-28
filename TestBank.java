@@ -50,24 +50,9 @@ public class TestBank {
         System.out.println("\n--- Testing Heap Optimization ---");
         StringImmutability();
         
-        // Heap Allocator (Reassignment & Garbage Collection)
+        // Call the newly extracted Heap Allocator method
         System.out.println("\n--- Testing Heap Reassignment & Garbage Collection ---");
-        BankAccount acc3 = new BankAccount(2000);
-        BankAccount acc4 = new BankAccount(5000);
-        
-        // acc4 now points to the same Heap object as acc3
-        acc4 = acc3; 
-        System.out.println("After Reassignment (acc4 = acc3), Acc4 Balance becomes: $" + acc4.getBalance());
-        
-        acc3.deposit(500); // Deposit to acc3, which also affects acc4 since they point to the same object
-        System.out.println("Deposited $500 to Acc3. Acc4 Balance is also: $" + acc4.getBalance() + " (Because both references point to the same Heap object)");
-        
-        // Nullifying references to trigger Garbage Collection
-        acc3 = null;
-        acc4 = null;
-        System.out.println("References nullified (acc3 = null, acc4 = null). Heap object is now orphaned.");
-        System.gc(); // Manually requesting the JVM to run the Garbage Collector
-        System.out.println("Garbage Collection triggered to clean up orphaned objects.");
+        CallHeap();
 
         System.out.println("\n--- Testing Stack Overflow ---");
         try {
@@ -107,5 +92,25 @@ public class TestBank {
         StringBuilder log = new StringBuilder("Customer: ");
         log.append(customer);
         System.out.println(log);
+    }
+
+    // Demonstrates Heap allocation, reassignment, and Garbage Collection
+    public static void CallHeap() {
+        BankAccount acc3 = new BankAccount(2000);
+        BankAccount acc4 = new BankAccount(5000);
+        
+        // acc4 now points to the same Heap object as acc3
+        acc4 = acc3; 
+        System.out.println("After Reassignment (acc4 = acc3), Acc4 Balance becomes: $" + acc4.getBalance());
+        
+        acc3.deposit(500); // Deposit to acc3, which also affects acc4 since they point to the same object
+        System.out.println("Deposited $500 to Acc3. Acc4 Balance is also: $" + acc4.getBalance() + " (Because both references point to the same Heap object)");
+        
+        // Nullifying references to trigger Garbage Collection
+        acc3 = null;
+        acc4 = null;
+        System.out.println("References nullified (acc3 = null, acc4 = null). Heap object is now orphaned.");
+        System.gc(); // Manually requesting the JVM to run the Garbage Collector
+        System.out.println("Garbage Collection triggered to clean up orphaned objects.");
     }
 }
