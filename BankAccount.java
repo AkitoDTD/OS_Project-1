@@ -9,15 +9,15 @@ public class BankAccount {
         this.balance = balance;
     }
 
-    // Adds money to the balance after checking that the amount is positive
-    public void deposit(double amount) {
+    // Synchronized, prevents Race Conditions when multiple threads deposit concurrently
+    public synchronized void deposit(double amount) {
         if (validateTransaction(amount)) {
             updateBalance(amount);
         }
     }
 
-    // Subtracts money after checking amount and checking for sufficient funds
-    public void withdraw(double amount) {
+    // Synchronized, ensures thread-safe withdrawals
+    public synchronized void withdraw(double amount) {
         if (validateTransaction(amount)) {
             if (balance - amount < 0) {
                 System.out.println("Insufficient balance.");
@@ -31,8 +31,8 @@ public class BankAccount {
         return balance;
     }
 
-    // Moves money from this account object to another account object in the Heap
-    public void transfer(double amount, BankAccount target) {
+    // Locks the method so transfers process atomically without thread interference
+    public synchronized void transfer(double amount, BankAccount target) {
         if (validateTransaction(amount)) {
             if (this.balance >= amount) {
                 this.withdraw(amount); // Remove from source
@@ -52,8 +52,9 @@ public class BankAccount {
         return true;
     }
 
-    // The only method that directly modifies the protected balance
-    protected void updateBalance(double amount) {
+    // The only method that directly modifies the protected balance. 
+    // Synchronized to lock the critical section of memory.
+    protected synchronized void updateBalance(double amount) {
         balance += amount;
     }
 }
